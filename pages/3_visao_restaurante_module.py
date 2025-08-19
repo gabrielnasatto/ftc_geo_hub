@@ -112,32 +112,45 @@ df = pd.read_csv("dataset/train.csv")
 df = clean_code(df)
 
 
-# ============================================================
+#============================================================
 # Barra lateral
-# ============================================================
-st.header("Marketplace - Visão Restaurantes")
+#============================================================
+st.header('Marketplace - Visão Entregadores')
 
-st.sidebar.image(Image.open("logo.jpeg"), width=120)
-st.sidebar.markdown("# GeoHub\n## Fastest Delivery in Town\n---")
+image_path = ('logo.jpeg')
+image = Image.open( image_path )
+st.sidebar.image(image, width=120)
 
+st.sidebar.markdown('# GeoHub')
+st.sidebar.markdown('## Fastest Delivery in Town')
+st.sidebar.markdown("""---""")
+
+st.sidebar.markdown('## Selecione uma data limite')
 date_slider = st.sidebar.slider(
-    "Até qual valor?",
+    'Até qual valor?',
     value=datetime.datetime(2022, 4, 13),
     min_value=datetime.datetime(2022, 2, 11),
     max_value=datetime.datetime(2022, 4, 6),
-    format="DD-MM-YYYY",
+    format='DD-MM-YYYY'
 )
+
+st.sidebar.markdown("""---""")
 
 traffic_options = st.sidebar.multiselect(
-    "Quais as condições do trânsito?",
-    ["Low", "Medium", "High", "Jam"],
-    default=["Low", "Medium", "Jam"],
-)
+    'Quais as condições do trânsito?',
+    ['Low', 'Medium', 'High', 'Jam'],
+    default=['Low', 'Medium', 'Jam'])
 
-st.sidebar.markdown("---\n### Power by Gabriel Nasatto")
+st.sidebar.markdown("""---""")
+st.sidebar.markdown('### Power by Gabriel Nasatto')
 
-# Filtros
-df = df[(df["Order_Date"] < date_slider) & (df["Road_traffic_density"].isin(traffic_options))]
+#Filtros de Data
+linhas_selecionadas = df['Order_Date'] < date_slider
+df = df.loc[linhas_selecionadas, :]
+
+#Filtros de trânsito
+linhas_selecionadas = df['Road_traffic_density'].isin(traffic_options)
+df = df.loc[linhas_selecionadas, :]
 
 
 # ============================================================
